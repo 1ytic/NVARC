@@ -1,0 +1,87 @@
+{
+  "version": "1.0",
+  "truncation": null,
+  "padding": null,
+  "added_tokens": [
+    {
+      "id": 13,
+      "content": "<|endoftext|>",
+      "single_word": false,
+      "lstrip": false,
+      "rstrip": false,
+      "normalized": false,
+      "special": true
+    },
+    {
+      "id": 14,
+      "content": "<|im_start|>",
+      "single_word": false,
+      "lstrip": false,
+      "rstrip": false,
+      "normalized": false,
+      "special": true
+    },
+    {
+      "id": 15,
+      "content": "<|im_end|>",
+      "single_word": false,
+      "lstrip": false,
+      "rstrip": false,
+      "normalized": false,
+      "special": true
+    }
+  ],
+  "normalizer": {
+    "type": "NFC"
+  },
+  "pre_tokenizer": {
+    "type": "Sequence",
+    "pretokenizers": [
+      {
+        "type": "Split",
+        "pattern": {
+          "Regex": "(?i:'s|'t|'re|'ve|'m|'ll|'d)|[^\\r\\n\\p{L}\\p{N}]?\\p{L}+|\\p{N}| ?[^\\s\\p{L}\\p{N}]+[\\r\\n]*|\\s*[\\r\\n]+|\\s+(?!\\S)|\\s+"
+        },
+        "behavior": "Isolated",
+        "invert": false
+      },
+      {
+        "type": "ByteLevel",
+        "add_prefix_space": false,
+        "trim_offsets": false,
+        "use_regex": false
+      }
+    ]
+  },
+  "post_processor": {
+    "type": "ByteLevel",
+    "add_prefix_space": false,
+    "trim_offsets": false,
+    "use_regex": false
+  },
+  "decoder": {
+    "type": "ByteLevel",
+    "add_prefix_space": false,
+    "trim_offsets": false,
+    "use_regex": false
+  },
+  "model": {
+    "type": "WordLevel",
+    "unk_token": "<|endoftext|>",
+    "vocab": {
+      "0": 0,
+      "1": 1,
+      "2": 2,
+      "3": 3,
+      "4": 4,
+      "5": 5,
+      "6": 6,
+      "7": 7,
+      "8": 8,
+      "9": 9,
+      "Ċ": 10,
+      "user": 11,
+      "assistant": 12
+    }
+  }
+}
