@@ -1,0 +1,21 @@
+[submodule "external/ARC-AGI-2"]
+	path = external/ARC-AGI-2
+	url = https://github.com/arcprize/ARC-AGI-2
+[submodule "external/h-arc"]
+	path = external/h-arc
+	url = https://github.com/Le-Gris/h-arc
+[submodule "external/BARC"]
+	path = external/BARC
+	url = https://github.com/xu3kev/BARC
+[submodule "external/MINI-ARC"]
+	path = external/MINI-ARC
+	url = https://github.com/KSB21ST/MINI-ARC
+[submodule "external/ConceptARC"]
+	path = external/ConceptARC
+	url = https://github.com/victorvikram/ConceptARC
+[submodule "external/re-arc"]
+	path = external/re-arc
+	url = https://github.com/michaelhodel/re-arc
+[submodule "external/TinyRecursiveModels"]
+	path = external/TinyRecursiveModels
+	url = https://github.com/SamsungSAILMontreal/TinyRecursiveModels
