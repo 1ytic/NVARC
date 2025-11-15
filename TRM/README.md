@@ -48,7 +48,7 @@ eval_interval=1000 \
 epochs=10000
 ```
 
-This will save 10 checkpoints in the `checkpoint` directory. We uploaded these to a kaggle dataset and used them in our submissions.
+This will save 10 checkpoints in the `checkpoint` directory. We uploaded these to a [kaggle dataset](https://www.kaggle.com/datasets/cpmpml/arc-prize-trm-031) and used them in our submissions.
 
 ## 5. Evaluate the model (Optional).
 
@@ -76,3 +76,4 @@ This evaluation produced these statistics when we ran it:
 ```bash
 {'all': {'accuracy': 0.7744678, 'exact_accuracy': 0.043603994, 'lm_loss': 1.2915632, 'q_halt_accuracy': 0.76508063, 'q_halt_loss': 0.6607322, 'steps': 10.0}, 'ARC/pass@1': 0.0763888888888889, 'ARC/pass@2': 0.1013888888888889, 'ARC/pass@5': 0.1013888888888889, 'ARC/pass@10': 0.1013888888888889, 'ARC/pass@100': 0.1375, 'ARC/pass@1000': 0.1375}
 ```
+When submitted this scored 10.0 on Kaggle public leaderboard, version 18 of this notebook `https://www.kaggle.com/code/cpmpml/arc2-trm-v31?scriptVersionId=278223801`
