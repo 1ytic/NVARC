@@ -10,3 +10,6 @@
 8. Execute output logic and make output grids [scripts/generate_output_grids.py](scripts/generate_output_grids.py)
 9. Join and filter input/output grids into pairs [scripts/make_pairs.py](scripts/make_pairs.py)
 10. Create dataset with augmented puzzles [scripts/build_datasets.py](scripts/build_datasets.py)
+
+
+> **NOTE:** We recommend using the [NeMo-Skills](https://github.com/NVIDIA-NeMo/Skills) framework to generate data with LLMs. You can find more instructions on how to use this framework [here](https://nvidia-nemo.github.io/Skills/tutorials/2025/08/29/inference-with-gpt-oss-120b-using-stateful-python-code-execution/#synthetic-data-generation).
