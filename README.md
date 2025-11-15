@@ -6,7 +6,7 @@ The NVARC team includes Ivan Sorokin and Jean-Francois Puget, both working at NV
 
 The solution is described in the [paper](nvarc_2025.pdf) and consists of three main components:
 
-- Multi stage synthetic data generation;
+- Multi-stage synthetic data generation pipeline;
 - Improved version of the ARChitects solution that won the [ARC Prize competition in 2024](https://www.kaggle.com/competitions/arc-prize-2024);
 - Improved version of Tiny Recursive Models by Alexia Jolicoeur-Martineau.
 
@@ -34,7 +34,7 @@ The hyperparameters and fine-tuning scripts for the Qwen3 4B model are located i
 
 The submission notebook is available on Kaggle [sorokin/arc2-qwen3-unsloth-flash-lora-batch4-queue](https://www.kaggle.com/code/sorokin/arc2-qwen3-unsloth-flash-lora-batch4-queue).
 
-## Tiny Recurive Models
+## Tiny Recursive Models
 
 The scripts and instructions to train Tiny Recursive Models are in the [TRM](TRM) folder.
 
