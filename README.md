@@ -28,7 +28,7 @@ kaggle datasets download -d sorokin/nvarc-augmented-puzzles
 unzip nvarc-augmented-puzzles.zip
 ```
 
-## The Architect
+## The ARChitects
 
 The hyperparameters and fine-tuning scripts for the Qwen3 4B model are located in the [ARChitects](ARChitects) folder.
 
