@@ -2,7 +2,7 @@
 
 This repository contains the code and instructions to replicate the NVARC submissions to the [Arc Prize 2025 competition on Kaggle](https://www.kaggle.com/competitions/arc-prize-2025).
 
-The NVARC team includes Ivan Sorokin and Jean-Francois Puget, both working at NVIDIA at the time of the competition.
+The NVARC team includes Ivan Sorokin and Jean-Francois Puget, who are also members of the NVIDIA [KGMoN](https://www.nvidia.com/en-us/ai-data-science/kaggle-grandmasters) team.
 
 The solution is described in the [paper](nvarc_2025.pdf) and consists of three main components:
 
@@ -13,6 +13,13 @@ The solution is described in the [paper](nvarc_2025.pdf) and consists of three m
 ## Synthetic Data Generation
 
 The scripts and prompts for Synthetic Data Generation pipeline can be found in [SDG](SDG) folder.
+
+[NVARC Artifacts Puzzles](https://www.kaggle.com/datasets/sorokin/nvarc-artifacts-puzzles) dataset includes generated text used to construct the synthetic puzzles.
+
+```bash
+kaggle datasets download -d sorokin/nvarc-artifacts-puzzles
+unzip nvarc-artifacts-puzzles.zip
+```
 
 [NVARC Synthetic Puzzles](https://www.kaggle.com/datasets/sorokin/nvarc-synthetic-puzzles) dataset includes our 103k synthetic puzzles.
 
@@ -27,6 +34,8 @@ unzip nvarc-synthetic-puzzles.zip
 kaggle datasets download -d sorokin/nvarc-augmented-puzzles
 unzip nvarc-augmented-puzzles.zip
 ```
+
+Visualization of synthetic puzzles shown in the Kaggle notebook [nvarc-viewer](https://www.kaggle.com/code/sorokin/nvarc-viewer).
 
 ## The ARChitects
 
