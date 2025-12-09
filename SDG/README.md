@@ -2,7 +2,7 @@
 
 1. Prepare H-ARC user comments [scripts/h_arc_clean.py](scripts/h_arc_clean.py)
 2. Prepare BARC descriptions [scripts/barc_clean.py](scripts/barc_clean.py)
-3. Generate puzzle summaries with prompt [prompts/summary_v1.md](public/sdg/prompts/summary_v1.md)
+3. Generate puzzle summaries with prompt [prompts/summary_v1.md](prompts/summary_v1.md)
 4. Generate mix summaries with prompt [prompts/mix_v1.md](prompts/mix_v1.md)
 5. Generate input logic with prompt [prompts/generate_puzzle_input.md](prompts/generate_puzzle_input.md)
 6. Generate output logic with prompt [prompts/generate_puzzle_output.md](prompts/generate_puzzle_output.md)
