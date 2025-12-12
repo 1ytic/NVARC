@@ -48,3 +48,7 @@ The submission notebook is available on Kaggle [sorokin/arc2-qwen3-unsloth-flash
 The scripts and instructions to train Tiny Recursive Models are in the [TRM](TRM) folder.
 
 The submission notebook is available on Kaggle [cpmpml/arc2-trm-v31](https://www.kaggle.com/code/cpmpml/arc2-trm-v31?scriptVersionId=278223801).
+
+## ARC AGI 2024
+
+We ran our winning solution on last year ARC AGI evaluation data. The code can be found in the [ARC-AGI1](ARC-AGI1) folder.
