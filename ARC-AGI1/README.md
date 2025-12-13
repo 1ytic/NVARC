@@ -1,4 +1,4 @@
-Code to run our Qwen 4B modle on ARC-AGI 2024 evaluation data.
+Code to run our Qwen 4B model on ARC-AGI 2024 evaluation data.
 
 The code is the same as in the notebook we used for our winning solution in Kaggle: [sorokin/arc2-qwen3-unsloth-flash-lora-batch4-queue](https://www.kaggle.com/code/sorokin/arc2-qwen3-unsloth-flash-lora-batch4-queue).
 
