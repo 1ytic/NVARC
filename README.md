@@ -1,5 +1,8 @@
 # Trelis Fork Notes
 
+>![IMPORTANT]
+> DEVELOPER NOTES: a) Keep in touch with Ronan via WhatsApp re progress, b) Ronan will provide written feedback at least once per month on progress / quality and will add/remove/change repo access based on quality standards/progress c) if you no longer have time to advance research, let Ronan know, d) developers who have contributed will be credited in any X / Youtube posts/videos. See [here](https://github.com/TrelisResearch/style-guide) for a very short style guide.
+
 The idea is to build a seed dataset of ARC AGI II **training** and later **public evaluation** tasks that can be used to create sythnthetic data as in the NVARC pipeline.
 
 ## A) Seed trace collection (two options)
