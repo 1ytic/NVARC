@@ -1,3 +1,37 @@
+# Trelis Fork Notes
+
+>![IMPORTANT]
+> DEVELOPER NOTES: a) Keep in touch with Ronan via WhatsApp re progress, b) Ronan will provide written feedback at least once per month on progress / quality and will add/remove/change repo access based on quality standards/progress c) if you no longer have time to advance research, let Ronan know, d) developers who have contributed will be credited in any X / Youtube posts/videos. See [here](https://github.com/TrelisResearch/style-guide) for a very short style guide.
+
+The idea is to build a seed dataset of ARC AGI II **training** and later **public evaluation** tasks that can be used to create sythnthetic data as in the NVARC pipeline.
+
+## A) Seed trace collection (two options)
+We will support two trace sources:
+
+**Option A1 — Human trace (Axel)**
+- Axel records himself solving AA2 training tasks on stream (audio/video).
+- We transcribe and convert into structured traces.
+
+**Option A2 — LLM trace (Dheeraj)**
+- Use **Gemini Flash 3.0** to generate traces for the same AA2 training tasks.
+
+Ultimately this should give us two datasets. Ideally, we have ways to assess the quality of seed task descriptions (and, later, the quality of compounded descriptions).
+
+## B) Synthetic expansion
+Once traces/descriptions are solid, we will implement the “compounding descriptions → code” pipeline:
+- augment descriptions with metadata,
+- compound into harder descriptions,
+- generate input-grid generator code,
+- generate solver code,
+- verify.
+
+Here we are following NVARC.
+
+## Training
+We can choose to pre-train a Qwen model OR we can decide to train a VARC type model (which is smaller and likely requires less pre-training).
+
+---
+
 # NVARC solution to ARC-AGI-2 2025
 
 This repository contains the code and instructions to replicate the NVARC submissions to the [Arc Prize 2025 competition on Kaggle](https://www.kaggle.com/competitions/arc-prize-2025).
