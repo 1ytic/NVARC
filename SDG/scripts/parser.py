@@ -1,11 +1,10 @@
 import re
 import tree_sitter_python
-from tree_sitter import Language, Parser, Node
+from tree_sitter import Language, Parser, Node, Query, QueryCursor
 
 PY_LANGUAGE = Language(tree_sitter_python.language())
 
-parser = Parser()
-parser.language = PY_LANGUAGE
+parser = Parser(PY_LANGUAGE)
 
 def get_value(match: dict[str, list[Node]], name: str) -> str:
     values = match[name]
@@ -13,7 +12,8 @@ def get_value(match: dict[str, list[Node]], name: str) -> str:
     return values[0].text.decode("utf8")
 
 def parse_functions(text: str) -> dict[str, str]:
-    query = PY_LANGUAGE.query(
+    query = Query(
+        PY_LANGUAGE,
         """
         (
             function_definition
@@ -23,7 +23,11 @@ def parse_functions(text: str) -> dict[str, str]:
     )
     names = dict()
     tree = parser.parse(bytes(text, "utf8"))
-    for _, match in query.matches(tree.root_node):
+    
+    # matches() is now used like this in newer tree-sitter versions:
+    # returns iterator of (pattern_index, capture_dict)
+    cursor = QueryCursor(query)
+    for _, match in cursor.matches(tree.root_node):
         if match["code"][0].start_point.column != 0:
             # Exclude nested functions
             continue

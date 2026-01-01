@@ -1,0 +1,23 @@
+{
+  "task_id": "0becf7df",
+  "trace_source": "llm",
+  "intended_model_family": "gemini-flash",
+  "execution_model": "gemini-2.0-flash-exp",
+  "observations": [
+    "The grid is 10x10.",
+    "The top-left portion of the grid contains numbers other than zero.",
+    "The non-zero numbers in each example are transformed such that the right-most of any sequence of numbers is transferred to where zeroes exist to the right",
+    "The rest of the grid is all zeros."
+  ],
+  "hypotheses": [
+    "The rightmost number in a sequence of non-zero numbers is shifted further to the right, overwriting zero values until another non-zero number or the edge of the grid is encountered.",
+    "Non-zero numbers are rearranged such that the right-most number of each sequence is shifted to fill zero values to the right until the edge."
+  ],
+  "rejected_hypotheses": [],
+  "selected_rule": "The rightmost number in a sequence of non-zero numbers is shifted further to the right, overwriting zero values until another non-zero number or the edge of the grid is encountered.",
+  "step_plan": [
+    "Identify the rightmost number in each sequence of non-zero numbers within the input grid.",
+    "Shift that number to the right, overwriting any zeros encountered, until another non-zero number or the grid's edge is reached."
+  ],
+  "confidence": 0.8
+}
