@@ -30,8 +30,8 @@
 
 **Current Status**: 
 - ✅ Our generator produces Trelis trace format (good for reasoning assessment)
-- ⚠️ Not yet integrated with NVARC's `SDG/` pipeline code
-- 📋 Need converter: `trace_to_nvarc_description(trace)` function
+- ✅ Integrated with NVARC codebase: `trace_to_nvarc.py` imports and uses `SDG.scripts.utils.summary_to_text` for strictly compatible output.
+- ✅ Converter implemented: `trace_to_nvarc.py` bridges the gap.
 
 **Next Steps**:
 1. **Add converter function** to transform Trelis traces → NVARC descriptions

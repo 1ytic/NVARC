@@ -1,0 +1,23 @@
+{
+  "task_id": "17b80ad2",
+  "trace_source": "llm",
+  "intended_model_family": "gemini-flash",
+  "execution_model": "gemini-2.0-flash-exp",
+  "observations": [
+    "Values in the input grid are copied to all cells above and below them in the same column.",
+    "Values propagate until they encounter another non-zero value, or the edge of the grid."
+  ],
+  "hypotheses": [
+    "Copy each number vertically until the top or bottom is reached, overwriting zeros.",
+    "Copy each number vertically until another number is encountered."
+  ],
+  "rejected_hypotheses": [],
+  "selected_rule": "Copy each number vertically until another number is encountered.",
+  "step_plan": [
+    "For each column, iterate from top to bottom.",
+    "If a non-zero value is found, copy that value to all subsequent zero-valued cells in the same column, until the end or until another non-zero value is found.",
+    "For each column, iterate from bottom to top.",
+    "If a non-zero value is found, copy that value to all preceding zero-valued cells in the same column, until the top or until another non-zero value is found."
+  ],
+  "confidence": 0.85
+}

@@ -8,6 +8,8 @@ that can be used with the SDG pipeline for synthetic data generation.
 
 import json
 import re
+import os
+import sys
 from typing import Dict, List
 
 
@@ -122,8 +124,18 @@ def convert_trace_file(trace_file: str, output_file: str = None):
     if output_file is None:
         output_file = trace_file.replace('.json', '.nvarc.md')
     
-    # Format as NVARC-style markdown
-    nvarc_text = f"""<rules_summary>
+    # Format as NVARC-style markdown using NVARC utils
+    try:
+        # Add SDG/scripts to path to import utils
+        sys.path.append(os.path.join(os.path.dirname(__file__), "SDG", "scripts"))
+        from utils import summary_to_text
+        
+        nvarc_text = summary_to_text(nvarc_desc)
+        # Add newlines at the end to match original format if needed
+        nvarc_text += "\n"
+    except ImportError:
+        print("Warning: Could not import SDG/scripts/utils.py. Using fallback formatting.")
+        nvarc_text = f"""<rules_summary>
 {nvarc_desc["rules_summary"]}
 </rules_summary>
 
@@ -152,12 +164,36 @@ def convert_trace_file(trace_file: str, output_file: str = None):
 
 
 if __name__ == "__main__":
-    import sys
-    if len(sys.argv) < 2:
-        print("Usage: python trace_to_nvarc.py <trace_file.json> [output_file.md]")
-        sys.exit(1)
-    
-    trace_file = sys.argv[1]
-    output_file = sys.argv[2] if len(sys.argv) > 2 else None
-    convert_trace_file(trace_file, output_file)
+    import argparse
+    import glob
+    import os
+
+    parser = argparse.ArgumentParser(description="Convert Trelis ARC traces to NVARC descriptions.")
+    parser.add_argument("input", nargs="?", help="Input JSON file or directory (if --input-dir is not used)")
+    parser.add_argument("output", nargs="?", help="Output Markdown file or directory")
+    parser.add_argument("--input-dir", help="Directory containing JSON trace files")
+    parser.add_argument("--output-dir", help="Directory to save converted .nvarc.md files")
+
+    args = parser.parse_args()
+
+    if args.input_dir:
+        input_dir = args.input_dir
+        output_dir = args.output_dir or input_dir
+        os.makedirs(output_dir, exist_ok=True)
+        
+        json_files = glob.glob(os.path.join(input_dir, "*.json"))
+        print(f"Processing {len(json_files)} files in {input_dir}...")
+        for f in json_files:
+            base = os.path.basename(f).replace(".json", ".nvarc.md")
+            out = os.path.join(output_dir, base)
+            try:
+                convert_trace_file(f, out)
+            except Exception as e:
+                print(f"Error converting {f}: {e}")
+    elif args.input:
+        trace_file = args.input
+        output_file = args.output
+        convert_trace_file(trace_file, output_file)
+    else:
+        parser.print_help()
 

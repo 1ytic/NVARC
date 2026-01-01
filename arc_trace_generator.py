@@ -25,6 +25,10 @@ import json
 import re
 import sys
 import google.generativeai as genai
+import dotenv
+
+# Load environment variables from .env if present
+dotenv.load_dotenv()
 
 # Configure Gemini
 genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
@@ -200,8 +204,10 @@ def validate_schema(data):
         raise ValueError("trace_source must be 'llm'")
     if data["intended_model_family"] != "gemini-flash":
         raise ValueError("intended_model_family must be 'gemini-flash'")
-    if data["execution_model"] != "gemini-pro":
-        raise ValueError("execution_model must be 'gemini-pro'")
+    # Update to match the actual model being used
+    if "gemini" not in data["execution_model"].lower() or "flash" not in data["execution_model"].lower():
+        # Allow any gemini flash variant
+        raise ValueError(f"execution_model must be a gemini-flash variant, got {data['execution_model']}")
     
     if len(data["hypotheses"]) < 2:
         raise ValueError("Must have at least two hypotheses")
@@ -244,6 +250,9 @@ def generate_trace(task_id=None, task_data=None):
     else:
         raise ValueError("Either provide task_data and task_id, or set ARC_TASK_TEXT")
     
+    # Use Gemini Flash as requested (Dheeraj's task)
+    model_name = "gemini-2.0-flash-exp" 
+    
     prompt = f"""Solve this ARC (Abstraction and Reasoning Corpus) task and generate a structured reasoning trace as JSON.
 
 TASK:
@@ -254,7 +263,7 @@ Generate a JSON object with this EXACT structure:
   "task_id": "{task_id}",
   "trace_source": "llm",
   "intended_model_family": "gemini-flash",
-  "execution_model": "gemini-pro",
+  "execution_model": "{model_name}",
   "observations": [],
   "hypotheses": [],
   "rejected_hypotheses": [],
@@ -298,7 +307,7 @@ LANGUAGE STYLE:
 
 Output ONLY valid JSON. No markdown, no explanations, no code blocks. Just the JSON object."""
 
-    model = genai.GenerativeModel("gemini-pro-latest")
+    model = genai.GenerativeModel(model_name)
     response = model.generate_content(prompt)
     
     if not response.text:
@@ -375,6 +384,9 @@ def generate_batch(target_count=5):
             if generate_and_save_trace(task_id, task_data, traces_dir):
                 current_count += 1
                 print(f"Saved trace for task {task_id}")
+                # Add delay to avoid rate limiting
+                import time
+                time.sleep(10)
         except Exception as e:
             print(f"ERROR generating trace for {task_id}: {e}", file=sys.stderr)
             continue
@@ -411,8 +423,8 @@ if __name__ == "__main__":
             data = generate_trace(task_id=task_id, task_data=all_tasks[task_id])
             print(json.dumps(data, indent=2))
         else:
-            # Batch mode: generate up to 5 traces
-            generate_batch(target_count=5)
+            # Batch mode: generate up to 100 traces
+            generate_batch(target_count=100)
     except Exception as e:
         print(f"ERROR: {e}", file=sys.stderr)
         sys.exit(1)
