@@ -35,9 +35,13 @@ def run_conversion(in_path, out_path):
         print(f"-> {out}")
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Convert Trelis ARC traces to NVARC")
-    parser.add_argument("input", help="Single file or directory")
-    parser.add_argument("output", nargs="?", help="Output file or directory")
+    parser = argparse.ArgumentParser(
+        description="Convert Trelis ARC traces to NVARC format",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="Example:\n  uv run trace_to_nvarc.py traces/"
+    )
+    parser.add_argument("input", help="Input: single file or directory")
+    parser.add_argument("output", nargs="?", help="Output: file or directory (default: same as input)")
     args = parser.parse_args()
     run_conversion(args.input, args.output)
 

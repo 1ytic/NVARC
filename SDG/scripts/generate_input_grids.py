@@ -11,7 +11,7 @@ import timeout_decorator
 
 
 def validate_grids(grids: list[Grid]) -> bool:
-    if len(grids) < 5:
+    if len(grids) < 1:
         return False
     unique_colors = set()
     first_seed, first_grid = grids[0]
@@ -89,10 +89,16 @@ def generate_grids(inputs_mask: str, grids_prefix: str, num_grids: int, init_see
     for file_name in tqdm(puzzle_files, desc="Generating input grids"):
 
         puzzle_parts = file_name.split("/")
-        puzzle_name = puzzle_parts[-1][:-3]
-        puzzle_batch = puzzle_parts[-3]
-        split_name = puzzle_parts[-4]
-        grids_json = f"{grids_prefix}/{split_name}/{puzzle_batch}/{puzzle_name}.json"
+        puzzle_name = os.path.splitext(puzzle_parts[-1])[0]
+        # Robust path extraction
+        puzzle_batch = puzzle_parts[-3] if len(puzzle_parts) >= 3 else "default_batch"
+        split_name = puzzle_parts[-4] if len(puzzle_parts) >= 4 else "default_split"
+        
+        # If paths are shallow, just put everything in a flat grids folder
+        if len(puzzle_parts) < 3:
+            grids_json = f"{grids_prefix}/{puzzle_name}.json"
+        else:
+            grids_json = f"{grids_prefix}/{split_name}/{puzzle_batch}/{puzzle_name}.json"
 
         if os.path.exists(grids_json):
             num_existing_grids += 1

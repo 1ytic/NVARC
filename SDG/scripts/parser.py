@@ -76,6 +76,6 @@ def remove_unused_functions(code: str) -> str:
 def parse_python_code(code: str):
     codes = re.findall(r"```python(.*?)```", code, re.DOTALL)
     if not codes:
-        return None
+        return code.strip()
     longest_code = max(codes, key=len)
     return longest_code.strip()
