@@ -1,3 +1,11 @@
+"""
+ARC-AGI-2 Trace Generator using Gemini 3 Flash.
+
+This script is standalone and does NOT use SDG scripts. It generates JSON traces
+directly from ARC task data. SDG scripts are used later in the pipeline:
+- trace_to_nvarc.py converts traces to NVARC format
+- seed_to_logic.py uses SDG prompts for code generation
+"""
 import argparse
 import time
 import os
