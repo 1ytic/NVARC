@@ -9,3 +9,14 @@ test_gemini.py
 venv/
 env/
 *.log
+
+# Generated data
+traces/
+traces_augmented/
+traces_v2_archive/
+logic/
+grids/
+grids_test/
+synthetic/
+test_results.json
+
