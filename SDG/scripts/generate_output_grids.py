@@ -28,26 +28,37 @@ def generate_output_grid(output_code: str, input_grid: Grid) -> Grid | None:
 
 def generate_grids(solutions_mask: str, input_grids_prefix: str, output_grids_prefix: str, min_solutions_per_puzzle: int):
 
-    puzzle_files = glob.glob(solutions_mask + "/completions/0.md")
-    print(f"Found {len(puzzle_files)} solution puzzles in {solutions_mask}")
+    # If the mask already points to files (e.g. logic/*.py), use it directly
+    if solutions_mask.endswith(".py"):
+        puzzle_files = glob.glob(solutions_mask)
+    else:
+        puzzle_files = glob.glob(solutions_mask + "/completions/0.md")
+    print(f"Found {len(puzzle_files)} target files in {solutions_mask}")
 
     num_skipped_puzzles = 0
     num_existing_grids = 0
 
     for file_name in tqdm(puzzle_files, desc="Generating output grids"):
 
-        puzzle_dir = os.path.dirname(os.path.dirname(file_name))
-        puzzle_parts = puzzle_dir.split("/")
-        puzzle_name = puzzle_parts[-1]
-        puzzle_batch = puzzle_parts[-2]
-        puzzle_version = puzzle_parts[-3]
+        if file_name.endswith(".py"):
+            puzzle_name = os.path.splitext(os.path.basename(file_name))[0]
+            puzzle_batch = "default_batch"
+            puzzle_version = "default_version"
+            puzzle_dir = os.path.dirname(file_name)
+        else:
+            puzzle_dir = os.path.dirname(os.path.dirname(file_name))
+            puzzle_parts = puzzle_dir.split("/")
+            puzzle_name = puzzle_parts[-1]
+            puzzle_batch = puzzle_parts[-2]
+            puzzle_version = puzzle_parts[-3]
 
-        grids_output_json = f"{output_grids_prefix}/{puzzle_version}/{puzzle_batch}/{puzzle_name}.json"
-        if os.path.exists(grids_output_json):
-            num_existing_grids += 1
-            continue
-
-        grids_input_json = f"{input_grids_prefix}/{puzzle_version}/{puzzle_batch}/{puzzle_name}.json"
+        if file_name.endswith(".py"):
+            grids_output_json = os.path.join(output_grids_prefix, f"{puzzle_name}.json")
+            grids_input_json = os.path.join(input_grids_prefix, f"{puzzle_name}.json")
+        else:
+            grids_output_json = os.path.join(output_grids_prefix, puzzle_version, puzzle_batch, f"{puzzle_name}.json")
+            grids_input_json = os.path.join(input_grids_prefix, puzzle_version, puzzle_batch, f"{puzzle_name}.json")
+        
         if not os.path.exists(grids_input_json):
             num_skipped_puzzles += 1
             continue
@@ -55,29 +66,33 @@ def generate_grids(solutions_mask: str, input_grids_prefix: str, output_grids_pr
         try:
             with open(grids_input_json, "r") as f:
                 input_grids = json.load(f)
-            assert len(input_grids) == 30
+            assert len(input_grids) >= 1
         except:
             print(f"Error loading {grids_input_json}")
             num_skipped_puzzles += 1
             continue
 
-        output_codes = []
-        for i in range(20):
-            if not os.path.exists(f"{puzzle_dir}/completions/{i}.md"):
-                break
-            with open(f"{puzzle_dir}/completions/{i}.md", "r") as f:
-                output_code = f.read()
-            output_code = parse_python_code(output_code)
-            if output_code is None:
-                break
-            try:
-                output_code = remove_unused_functions(output_code)
-            except:
-                break
-            if "def generate_puzzle_output(" not in output_code:
-                break
-            output_codes.append(output_code)
-        if len(output_codes) < min_solutions_per_puzzle:
+        if file_name.endswith(".py"):
+            output_codes = [parse_python_code(open(file_name).read())]
+        else:
+            output_codes = []
+            for i in range(20):
+                if not os.path.exists(f"{puzzle_dir}/completions/{i}.md"):
+                    break
+                with open(f"{puzzle_dir}/completions/{i}.md", "r") as f:
+                    output_code = f.read()
+                output_code = parse_python_code(output_code)
+                if output_code is None:
+                    break
+                try:
+                    output_code = remove_unused_functions(output_code)
+                except:
+                    break
+                if "def generate_puzzle_output(" not in output_code:
+                    break
+                output_codes.append(output_code)
+        
+        if len(output_codes) < min_solutions_per_puzzle and not file_name.endswith(".py"):
             num_skipped_puzzles += 1
             continue
 

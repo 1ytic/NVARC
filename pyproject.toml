@@ -1,0 +1,20 @@
+[project]
+name = "trelis-nvarc"
+version = "0.1.0"
+description = "Reasoning trace generation and NVARC integration for ARC-AGI-2"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "google-generativeai",
+    "python-dotenv",
+    "numpy",
+    "matplotlib",
+    "tqdm",
+    "datasets",
+    "tree-sitter",
+    "tree-sitter-python",
+    "timeout-decorator",
+]
+
+[tool.uv]
+package = true

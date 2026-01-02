@@ -1,0 +1,22 @@
+.env
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+test_gemini.py
+.venv/
+venv/
+env/
+*.log
+
+# Generated data
+traces/
+traces_augmented/
+traces_v2_archive/
+logic/
+grids/
+grids_test/
+synthetic/
+test_results.json
+
