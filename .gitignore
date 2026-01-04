@@ -1,0 +1,11 @@
+.env
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+test_gemini.py
+.venv/
+venv/
+env/
+*.log
