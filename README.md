@@ -1,54 +1,107 @@
-# NVARC solution to ARC-AGI-2 2025
+# Trelis-NVARC
 
-This repository contains the code and instructions to replicate the NVARC submissions to the [Arc Prize 2025 competition on Kaggle](https://www.kaggle.com/competitions/arc-prize-2025).
+ARC-AGI-2 NVARC description generation and synthetic dataset creation using Gemini 3 Flash.
 
-The NVARC team includes Ivan Sorokin and Jean-Francois Puget, who are also members of the NVIDIA [KGMoN](https://www.nvidia.com/en-us/ai-data-science/kaggle-grandmasters) team.
+## Overview
 
-The solution is described in the [paper](nvarc_2025.pdf) and consists of three main components:
+This project implements the NVARC SDG (Synthetic Data Generation) pipeline for ARC-AGI-2 tasks, using Gemini 3 Flash as the LLM. The pipeline uses only SDG prompts and does not generate intermediate JSON traces.
 
-- Multi-stage synthetic data generation pipeline;
-- Improved version of the ARChitects solution that won the [ARC Prize competition in 2024](https://www.kaggle.com/competitions/arc-prize-2024);
-- Improved version of Tiny Recursive Models by Alexia Jolicoeur-Martineau.
+## NVARC SDG Pipeline
 
-## Synthetic Data Generation
+The complete pipeline follows these steps:
 
-The scripts and prompts for Synthetic Data Generation pipeline can be found in [SDG](SDG) folder.
+1. **Generate descriptions (.nvarc.md)** using `SDG/prompts/summary_v2.md` with Gemini 3 Flash
+2. **[SKIPPED]** Task mixing using `mix_v2.md` - we skip this step
+3. **Generate input code** using `SDG/prompts/generate_puzzle_input.md` prompt with Gemini 3 Flash
+4. **Generate output code** using `SDG/prompts/generate_puzzle_output.md` prompt with Gemini 3 Flash
+5. **Execute input logic** to generate input grids
+6. **Execute output logic** to generate output grids
+7. **Make pairs** from input/output grids
+8. **Build final dataset** with augmentations
 
-[NVARC Artifacts Puzzles](https://www.kaggle.com/datasets/sorokin/nvarc-artifacts-puzzles) dataset includes generated text used to construct the synthetic puzzles.
+**Simplified Approach**: This pipeline directly generates `.nvarc.md` files using SDG prompts, without intermediate JSON traces.
 
-```bash
-kaggle datasets download -d sorokin/nvarc-artifacts-puzzles
-unzip nvarc-artifacts-puzzles.zip
-```
-
-[NVARC Synthetic Puzzles](https://www.kaggle.com/datasets/sorokin/nvarc-synthetic-puzzles) dataset includes our 103k synthetic puzzles.
-
-```bash
-kaggle datasets download -d sorokin/nvarc-synthetic-puzzles
-unzip nvarc-synthetic-puzzles.zip
-```
-
-[NVARC Augmented Puzzles](https://www.kaggle.com/datasets/sorokin/nvarc-augmented-puzzles) dataset includes few subsets with 3.2M augmented puzzles.
+## Quick Start
 
 ```bash
-kaggle datasets download -d sorokin/nvarc-augmented-puzzles
-unzip nvarc-augmented-puzzles.zip
+# Activate virtual environment
+source .venv/bin/activate
+
+# Run complete pipeline on 3 sample tasks
+python3 run_nvarc_pipeline.py
+
+# Run on specific tasks
+python3 run_nvarc_pipeline.py --task-ids 007bbfb7,00d62c1b
+
+# Run on 10 random tasks
+python3 run_nvarc_pipeline.py --all-tasks --count 10
+
+# Generate more grids per task
+python3 run_nvarc_pipeline.py --task-ids 007bbfb7 --num-grids 50
+
+# Skip certain steps (e.g., regenerate grids only)
+python3 run_nvarc_pipeline.py --skip descriptions,code_generation
 ```
 
-Visualization of synthetic puzzles shown in the Kaggle notebook [nvarc-viewer](https://www.kaggle.com/code/sorokin/nvarc-viewer).
+## Pipeline Outputs
 
-## The ARChitects
+After running the pipeline, you'll find:
 
-The hyperparameters and fine-tuning scripts for the Qwen3 4B model are located in the [ARChitects](ARChitects) folder.
+- `traces/` - Puzzle descriptions (.nvarc.md files in XML format)
+- `logic/` - Generated Python code for input/output generation
+- `synthetic/grids_arc_input/` - Generated input grids
+- `synthetic/grids_arc_output/` - Generated output grids
+- `synthetic/pairs_arc/` - Input/output grid pairs
+- `synthetic/arc_dataset.json` - Final dataset with augmentations
 
-The submission notebook is available on Kaggle [sorokin/arc2-qwen3-unsloth-flash-lora-batch4-queue](https://www.kaggle.com/code/sorokin/arc2-qwen3-unsloth-flash-lora-batch4-queue).
+## Individual Scripts
 
-## Tiny Recursive Models
+You can also run individual steps:
 
-The scripts and instructions to train Tiny Recursive Models are in the [TRM](TRM) folder.
+```bash
+# Step 1: Generate descriptions (.nvarc.md) from ARC tasks using SDG summary_v2.md
+python3 generate_summaries.py --task 007bbfb7
+python3 generate_summaries.py --batch 100
 
-The submission notebook is available on Kaggle [cpmpml/arc2-trm-v31](https://www.kaggle.com/code/cpmpml/arc2-trm-v31?scriptVersionId=278223801).
+# Steps 3-4: Generate input/output code from descriptions
+python3 seed_to_logic.py --batch 10
 
-## ARC AGI 2024
+# Step 5: Generate input grids from code
+python3 SDG/scripts/generate_input_grids.py \
+  --inputs-mask "logic/*.py" \
+  --grids-prefix "synthetic/grids_arc_input" \
+  --num-grids 30
 
-We ran our winning solution on last year ARC AGI evaluation data. The code can be found in the [ARC-AGI1](ARC-AGI1) folder.
+# Step 6: Generate output grids
+python3 SDG/scripts/generate_output_grids.py \
+  --solutions-mask "logic/*.py" \
+  --input-grids-prefix "synthetic/grids_arc_input" \
+  --output-grids-prefix "synthetic/grids_arc_output"
+
+# Step 7: Create pairs
+python3 SDG/scripts/make_pairs.py \
+  --input-grids-prefix "synthetic/grids_arc_input" \
+  --output-grids-mask "synthetic/grids_arc_output/*/*.json" \
+  --output-prefix "synthetic/pairs_arc"
+
+# Step 8: Build dataset
+python3 SDG/scripts/build_datasets.py \
+  --input-prefix "synthetic/pairs_arc" \
+  --output-dataset "synthetic/arc_dataset.json" \
+  --augmentations dihedral color
+```
+
+## Testing
+
+Test generated code on original ARC tasks:
+
+```bash
+python3 test_on_original_tasks.py --batch --output test_results.json
+```
+
+## Key Differences from Original NVARC
+
+- **Task mixing skipped**: We don't use the `mix_v2.md` prompt to create mixed puzzles
+- **Gemini 3 Flash**: Uses `gemini-3-flash-preview` model instead of GPT/other LLMs
+- **Clean room compliance**: Uses only ARC-AGI-2 training challenges, no test/evaluation data
+
